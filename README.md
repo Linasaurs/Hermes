@@ -1,1 +1,1 @@
-# EmbeddedMiniProject
+# Embedded
