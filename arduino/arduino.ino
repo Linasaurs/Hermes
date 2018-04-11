@@ -23,33 +23,33 @@ ros::NodeHandle  nh;
 
 
 std_msgs::String str_msg;
-ros::Publisher chatter("arduino", &str_msg);
-Ping s_TL = Ping(12,0,0);
-Ping s_BL = Ping(13,0,0);
+ros::Publisher pub_front("sonic_front", &str_msg);
+ros::Publisher pub_right("sonic_right", &str_msg);
+Ping s_front = Ping(12,0,0);
+Ping s_right = Ping(13,0,0);
 char buffer[80];
 
 void setup()
 {
   nh.getHardware()->setBaud(115200);
   nh.initNode();
-  nh.advertise(chatter);
+  nh.advertise(pub_front);
+  nh.advertise(pub_right);  
 }
 
 void loop()
 {
-  s_TL.fire();
-  int cm_TL = s_TL.centimeters();
-  snprintf(buffer,sizeof("TL "),"%s","TL ");
-  snprintf(&buffer[3],sizeof(buffer),"%d",cm_TL);
+  s_front.fire();
+  int cm_front = s_front.centimeters();
+  snprintf(buffer,sizeof(buffer),"%d",cm_front);
   str_msg.data = buffer;
-  chatter.publish( &str_msg );
+  pub_front.publish( &str_msg );
   
-  s_BL.fire();  
-  int cm_BL = s_BL.centimeters();  
-  snprintf(buffer,sizeof("BL "),"%s","BL ");
-  snprintf(&buffer[3],sizeof(buffer),"%d",cm_BL);
+  s_right.fire();  
+  int cm_right = s_right.centimeters();  
+  snprintf(buffer,sizeof(buffer),"%d",cm_right);
   str_msg.data = buffer;
-  chatter.publish( &str_msg );
+  pub_right.publish( &str_msg );
   
   delay(100);
   nh.spinOnce();
