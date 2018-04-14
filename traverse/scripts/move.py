@@ -18,12 +18,13 @@ ser = serial.Serial('/dev/ttyS0', 19200, timeout = 1)
 class control:
 	def __init__(self):
 		self.move = 0
-		self.cn = 70
+		self.cn = 7
 		self.yaw = 0
 		self.read_yaw = 0
 		self.maxvalue = 400.0
 		self.standardspeed = 60.0
 		self.stp = 0;
+		self.starting_yaw = 0
 	
 		rospy.init_node('move_dagu', anonymous=True)
 		rospy.Subscriber("control_effort", Float64, self.bigfn)
@@ -36,7 +37,7 @@ class control:
 		#rospy.Subscriber("distance_to_box", Int32, self.distance_to_box)
 		#rospy.Subscriber("arrow_direction", Int32, self.arrow_direction)
 		
-		self.run()
+
  
 	def backward(self, speed):
 		command_left = chr(0xC2)
@@ -122,7 +123,143 @@ class control:
 		if (data.data == "stop"):
 			self.stp = 1;
 	
+	def move_forward(self):
+		if self.move > 0:
+			#self.move = -self.move
+			#self.turn_left(int(self.standardspeed * self.move/self.maxvalue))
+			speed = int(self.standardspeed)
+			#turn = int(interp(self.move,[-126,0],[0,self.standardspeed] ))
+			turn = int(interp(self.move,[0,126],[self.standardspeed,30] ))
+
+
+			rospy.loginfo('Left ')
+			rospy.loginfo('speed: ' +str(self.standardspeed))
+			rospy.loginfo('Turn: ' + str(int(turn)))
+			rospy.loginfo('Move: ' +str(self.move))
+
+			command_left = chr(0xC9)
+			command_right = chr(0xC1)
+			ser.write(command_left)
+			ser.write(chr(turn))
+			ser.write(command_right)
+			ser.write(chr(speed))
+
+		elif self.move < 0:				#Move forward towards box --Right
+			#self.turn_right(int(self.standardspeed * self.move/self.maxvalue))
+			speed = int(self.standardspeed)
+			#turn = int(interp(self.move,[0,126],[self.standardspeed,0] ))
+			turn = int(interp(self.move,[-126,0],[30,self.standardspeed] ))					
+
+			rospy.loginfo('Right ')
+			rospy.loginfo('Speed: ' +str(self.standardspeed))
+			rospy.loginfo('Turn: ' +str(int(turn)))
+			rospy.loginfo('Move: ' + str(self.move))
+
+			command_left = chr(0xC9)
+			command_right = chr(0xC1)
+			ser.write(command_left)
+			ser.write(chr(speed))
+			ser.write(command_right)
+			ser.write(chr(turn))
+
+		else :
+			self.forward(int(self.standardspeed))
+			rospy.loginfo('Move: ' +str(self.move))
+
+	def move_left(self):
+		print self.starting_yaw
+		if self.yaw > -90 and self.yaw < -1:
+			while self.yaw < 0 :
+				self.rotate_left(35)
+			while  abs(self.yaw - 0) < 90 - abs(self.starting_yaw-0) :
+				self.rotate_left(35)
+		elif self.yaw > 89 and self.yaw < 179 :
+			#while self.yaw < 179 or self.yaw > 0 :
+			while self.yaw > 0 :
+				self.rotate_left(35)
+			
+			while abs(self.yaw + 179) < 90 - abs(179 - self.starting_yaw) :
+				self.rotate_left(35)
+		else :
+			while abs(self.yaw - self.starting_yaw) < 90 :
+				self.rotate_left(35)
+
+		self.stop()
+		#rospy.sleep(2)
+		print self.yaw
+		#rospy.sleep(3000)
+		
+		#while abs(self.yaw - self.starting_yaw) < 90.0:
+			#print self.yaw
+		#	self.rotate_left(50)
+		'''				
+		if 	self.starting_yaw<-135.0:
+			while abs(self.yaw - self.starting_yaw) < 270.0:
+				self.rotate_left(50)		
+		else:
+			while abs(self.yaw - self.starting_yaw) < 90.0:
+				self.rotate_left(50)
+		'''
+		
+		#rospy.loginfo('completed left turn')
+		#print self.yaw
+
+	def moving_right(self):
+		print self.starting_yaw
+		if self.yaw < 90 and self.yaw > 1:
+			while self.yaw > 0 :
+				self.rotate_right(35)
+			while abs(self.yaw - 0) < 90 - abs(self.starting_yaw - 0) :
+				self.rotate_right(35)
+		elif self.yaw < -89 and self.yaw > -178:
+			#while self.yaw > -177 and self.yaw < 0:
+			while self.yaw < 0 :
+				self.rotate_right(35)
+			while abs(179 - self.yaw) < 90 - abs(179 + self.starting_yaw) :
+				self.rotate_right(35)
+		else :
+			while abs(self.yaw - self.starting_yaw) < 90 :
+				self.rotate_right(35)
+		
+		self.stop()
+		#rospy.sleep(2)
+		print self.yaw
+		#rospy.sleep(3000)
+		
+		#while abs(self.yaw - self.starting_yaw) < 90.0:
+			#print self.yaw
+		#	self.rotate_left(50)
+		'''				
+		if 	self.starting_yaw<-135.0:
+			while abs(self.yaw - self.starting_yaw) < 270.0:
+				self.rotate_left(50)		
+		else:
+			while abs(self.yaw - self.starting_yaw) < 90.0:
+				self.rotate_left(50)
+		'''
+		
+		#rospy.loginfo('completed left turn')
+		#print self.yaw
+		#rospy.sleep(3000)
+
+		#while abs(self.yaw - self.starting_yaw) < 87.0:
+		#	self.rotate_left(50)
+						
+		#if 	self.starting_yaw>135.0:
+		#	while self.yaw - self.starting_yaw < -270.0 or self.yaw>0:
+		#		print self.yaw
+		#		self.rotate_right(50)		
+		#else:
+		#	while abs(self.yaw - self.starting_yaw) < 90.0:
+			#	self.rotate_right(50)
+
+		
+		#rospy.loginfo('completed right turn')
+		#print self.yaw
+
+
 	def run(self):
+		self.cn = 2 #mazhar
 		rate = rospy.Rate(10)
 		while not rospy.is_shutdown():
 			if (self.stp == 1):
@@ -131,140 +268,16 @@ class control:
 			rospy.loginfo('control signal: ' +str(self.cn))
 			#while (self.read_yaw==0):
 			#		xyzsdff=0
-			starting_yaw = self.yaw
-			if self.cn == 0:					#Move forward towards box --Left
-				if self.move < 0:
-					#self.move = -self.move
-					#self.turn_left(int(self.standardspeed * self.move/self.maxvalue))
-					speed = int(self.standardspeed)
-					turn = int(interp(self.move,[-126,0],[0,self.standardspeed] ))
+			self.starting_yaw = self.yaw
+			if self.cn == 2:					#Move forward towards box --Left
+				self.move_forward()
 
+			elif self.cn == 4 :							#Rotate Left
+				self.move_left()
 
-					rospy.loginfo('Left ')
-					rospy.loginfo('speed: ' +str(self.standardspeed))
-					rospy.loginfo('Turn: ' + str(int(turn)))
-					rospy.loginfo('Move: ' +str(self.move))
-		
-					command_left = chr(0xC9)
-					command_right = chr(0xC1)
-					ser.write(command_left)
-					ser.write(chr(turn))
-					ser.write(command_right)
-					ser.write(chr(speed))
+			elif self.cn == 100 :							#Rotate Right
+				self.move_right()
 
-				elif self.move > 0:				#Move forward towards box --Right
-					#self.turn_right(int(self.standardspeed * self.move/self.maxvalue))
-					speed = int(self.standardspeed)
-					turn = int(interp(self.move,[0,126],[self.standardspeed,0] ))
-					
-					rospy.loginfo('Right ')
-					rospy.loginfo('Speed: ' +str(self.standardspeed))
-					rospy.loginfo('Turn: ' +str(int(turn)))
-					rospy.loginfo('Move: ' + str(self.move))
-		
-					command_left = chr(0xC9)
-					command_right = chr(0xC1)
-					ser.write(command_left)
-					ser.write(chr(speed))
-					ser.write(command_right)
-					ser.write(chr(turn))
-
-				else :
-					self.forward(int(self.standardspeed))
-					rospy.loginfo('Move: ' +str(self.move))
-
-			elif self.cn == 1 :							#Rotate Left
-				print starting_yaw
-				if self.yaw > -90 and self.yaw < -1:
-					while self.yaw < 0 :
-						self.rotate_left(35)
-					while  abs(self.yaw - 0) < 90 - abs(starting_yaw-0) :
-						self.rotate_left(35)
-				elif self.yaw > 89 and self.yaw < 179 :
-					#while self.yaw < 179 or self.yaw > 0 :
-					while self.yaw > 0 :
-						self.rotate_left(35)
-					
-					while abs(self.yaw + 179) < 90 - abs(179 - starting_yaw) :
-						self.rotate_left(35)
-				else :
-					while abs(self.yaw - starting_yaw) < 90 :
-						self.rotate_left(35)
-
-				self.stop()
-				#rospy.sleep(2)
-				print self.yaw
-				#rospy.sleep(3000)
-				
-				#while abs(self.yaw - starting_yaw) < 90.0:
-					#print self.yaw
-				#	self.rotate_left(50)
-				'''				
-				if 	starting_yaw<-135.0:
-					while abs(self.yaw - starting_yaw) < 270.0:
-						self.rotate_left(50)		
-				else:
-					while abs(self.yaw - starting_yaw) < 90.0:
-						self.rotate_left(50)
-				'''
-				
-				#rospy.loginfo('completed left turn')
-				#print self.yaw
-
-			elif self.cn == 2 :							#Rotate Right
-
-
-				print starting_yaw
-				if self.yaw < 90 and self.yaw > 1:
-					while self.yaw > 0 :
-						self.rotate_right(35)
-					while abs(self.yaw - 0) < 90 - abs(starting_yaw - 0) :
-						self.rotate_right(35)
-				elif self.yaw < -89 and self.yaw > -178:
-					#while self.yaw > -177 and self.yaw < 0:
-					while self.yaw < 0 :
-						self.rotate_right(35)
-					while abs(179 - self.yaw) < 90 - abs(179 + starting_yaw) :
-						self.rotate_right(35)
-				else :
-					while abs(self.yaw - starting_yaw) < 90 :
-						self.rotate_right(35)
-				
-				self.stop()
-				#rospy.sleep(2)
-				print self.yaw
-				#rospy.sleep(3000)
-				
-				#while abs(self.yaw - starting_yaw) < 90.0:
-					#print self.yaw
-				#	self.rotate_left(50)
-				'''				
-				if 	starting_yaw<-135.0:
-					while abs(self.yaw - starting_yaw) < 270.0:
-						self.rotate_left(50)		
-				else:
-					while abs(self.yaw - starting_yaw) < 90.0:
-						self.rotate_left(50)
-				'''
-				
-				#rospy.loginfo('completed left turn')
-				#print self.yaw
-				#rospy.sleep(3000)
-
-				#while abs(self.yaw - starting_yaw) < 87.0:
-				#	self.rotate_left(50)
-								
-				#if 	starting_yaw>135.0:
-				#	while self.yaw - starting_yaw < -270.0 or self.yaw>0:
-				#		print self.yaw
-				#		self.rotate_right(50)		
-				#else:
-				#	while abs(self.yaw - starting_yaw) < 90.0:
-					#	self.rotate_right(50)
-
-				
-				#rospy.loginfo('completed right turn')
-				#print self.yaw
 			else :
 				self.stop()
 
@@ -321,6 +334,7 @@ class control:
 if __name__ == '__main__':
 	try:
 		y = control()
+		y.run()
 	except rospy.ROSInterruptException:
 		pass
 

@@ -9,7 +9,7 @@ class control:
 	def __init__(self):
 		rospy.init_node('control', anonymous=True)
 		rospy.Subscriber("vision_topic", Int32, self.vision)
-		rospy.Subscriber("distance_to_wall", String, self.distance_to_wall)
+		rospy.Subscriber("sonic_front", String, self.distance_to_wall)
 		self.pub = rospy.Publisher('control_topic', Int32, queue_size=10)		
 
 
@@ -22,7 +22,7 @@ class control:
 		#rospy.Subscriber("arrow_direction", Int32, self.arrow_direction)
 
  		self.distance = '0'
-		self.detection = 0
+		self.detection = 2
 		#self.yaw = 0
 		#self.read_yaw = 0
 		#self.maxvalue = 400.0
@@ -46,15 +46,15 @@ class control:
 		data = float(output.getvalue().split()[1]);
 		self.detection=data
 
-## direction = 0 : mailbox detected, reading message if there any
-## direction = 1 : Face detected, read out message
-## direction = 2 : Nothing detected
+## detection = 0 : mailbox detected, reading message if there any
+## detection = 1 : Face detected, read out message
+## detection = 2 : Nothing detected
 
 
 
 	def publish(self):
 
-		x = 70
+		x = 50
 		while not rospy.is_shutdown():
 
 			if self.distance > x and self.detection == 0:
@@ -64,18 +64,18 @@ class control:
 			elif self.distance > x and self.detection == 2:
 				decision = 2
 			elif self.distance < x and self.detection == 2:
-				decision = 4
+				decision = 4 #decision = 3 USE 4 for ROTATE; 3 MAKES IT STOP FOR TESTING PURPOSES
 			elif self.distance > x:
 				decision = 0
 
 	# decision = "hello world %s" % rospy.get_time()
 			rospy.loginfo("distance = " + str(self.distance))
-			rospy.loginfo("direction = " + str(self.direction))
+			rospy.loginfo("detection = " + str(self.detection))
 			rospy.loginfo(decision)
 			self.pub.publish(decision)
 			
 
-## decision = 0 : Move Forward  pid
+## decision = 0 : Move Forward  pid   NOT USED
 ## decision = 1 : DON'T MOVE    Face detected read out msg
 ## decision = 2 : Move Forward     
 ## decision = 3 : DON'T MOVE	check mailbox   read msg and person
