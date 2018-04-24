@@ -5,7 +5,7 @@ from std_msgs.msg import Float64
 import numpy
 import StringIO
 
-cm_right_top =0
+'''cm_right_top =0
 cm_right_bottom =0
 
 def callback_right_top(data):
@@ -22,8 +22,11 @@ def callback_right_bottom(data):
 	rospy.loginfo("TOP:" + str(cm_right_top));
 	rospy.loginfo("BOTTOM:" + str(cm_right_bottom));
 	rospy.loginfo("AVG:" + str(cm_average));
-	pub.publish(cm_right_bottom)	
-    
+	pub.publish(cm_right_bottom)'''
+	
+def callback_right(data):
+	pub.publish (float(data.data));
+
 def listener():
 
     # In ROS, nodes are uniquely named. If two nodes with the same
@@ -33,8 +36,7 @@ def listener():
     # run simultaneously.
     rospy.init_node('traverse_pid', anonymous=True)
 
-    rospy.Subscriber("sonic_right_top", String, callback_right_top)
-    rospy.Subscriber("sonic_right_bottom", String, callback_right_bottom)    
+    rospy.Subscriber("sonic_right", String, callback_right)   
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()

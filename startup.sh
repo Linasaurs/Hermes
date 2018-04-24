@@ -26,4 +26,6 @@ gnome-terminal --window-with-profile=keep -e "rosrun pid controller"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rostopic pub /setpoint std_msgs/Float64 30"
 sleep 0.5
+gnome-terminal --window-with-profile=keep -e "rosrun traverse pid.py"
+sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun traverse control.py"
