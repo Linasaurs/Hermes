@@ -1,5 +1,4 @@
 #!/bin/bash
-trap "kill 0" EXIT
 gnome-terminal --window-with-profile=keep -e "roscore"
 sleep 2
 gnome-terminal --window-with-profile=keep -e "roslaunch jetson_csi_cam jetson_csi_cam.launch width:=640 height:=360 fps:=16"
@@ -22,5 +21,3 @@ sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rostopic pub /setpoint std_msgs/Float64 30"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun test_python control.py"
-echo "!!! end of startup.sh"
-wait
