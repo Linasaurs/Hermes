@@ -5,8 +5,12 @@ export ROS_MASTER_URI=http://$ROS_MASTER:11311
 if [ $ROS_IP = $ROS_MASTER ]
 then
 gnome-terminal --window-with-profile=keep -e "roscore"
-fi
 sleep 2
+gnome-terminal --window-with-profile=keep -e "rosrun network communication.py 1"
+else
+gnome-terminal --window-with-profile=keep -e "rosrun network communication.py 2"
+fi
+sleep 0.5
 gnome-terminal --window-with-profile=keep -e "roslaunch jetson_csi_cam jetson_csi_cam.launch width:=640 height:=360 fps:=16"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200"
