@@ -41,30 +41,67 @@
 #export ROS_MASTER_URI=http://$ROS_MASTER:11311
 
 import rospy
+import sys
 from std_msgs.msg import String
 
-def send_func(data):
-    rospy.loginfo("I sent to client: %s",data.data)
-    pub2.publish(data)
+def send_target(data):
+    data.data = "target " + data.data
+    rospy.loginfo("I sent: %s",data.data)
+    pub_my_out.publish(data)
+
+def send_message(data):
+    data.data = "message " + data.data
+    rospy.loginfo("I sent: %s",data.data)
+    pub_my_out.publish(data)
+
+def send_status(data):
+    data.data = "status " + data.data
+    rospy.loginfo("I sent: %s",data.data)
+    pub_my_out.publish(data)
 
 def rec_func(data):
-    rospy.loginfo("I heard from client: %s",data.data)
-    pub.publish(data)
+    rospy.loginfo("I heard: %s",data.data)
+    words = data.data.split()
+    received =  " ".join(words[1:])
+    if words[0] == "target":
+        pub_target.publish(received)
+    elif words[0] == "message":
+        pub_message.publish(received)
+    elif words[0] == "status":
+        pub_status.publish(received)
 
-def listener():
+def listener(other_out):
 
     # In ROS, nodes are uniquely named. If two nodes with the same
     # name are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
-    rospy.Subscriber('master_send', String, send_func)
-    rospy.Subscriber('client_outbox', String, rec_func)
+    rospy.Subscriber(other_out, String, rec_func)
+
+    rospy.Subscriber('my_target', String, send_target)
+    rospy.Subscriber('my_message', String, send_message)
+    rospy.Subscriber('my_status', String, send_status)
+
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
 if __name__ == '__main__':
-    pub = rospy.Publisher('master_inbox', String, queue_size=10)
-    pub2 = rospy.Publisher('master_outbox', String, queue_size=10)
-    rospy.init_node('master_comm', anonymous=True)
-    listener()
+    if sys.argv[1]=="1":
+        print ("Im master")
+        my_out= "out_1"
+        other_out= "out_2"
+    else:
+        print ("Im client")
+        my_out= "out_2"
+        other_out= "out_1"
+        
+
+    pub_my_out = rospy.Publisher(my_out, String, queue_size=10)
+    
+    pub_target = rospy.Publisher('other_target', String, queue_size=10)
+    pub_message = rospy.Publisher('other_message', String, queue_size=10)
+    pub_status = rospy.Publisher('other_status', String, queue_size=10)
+
+    rospy.init_node('comm', anonymous=True)
+    listener(other_out)
