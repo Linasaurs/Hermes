@@ -1,7 +1,4 @@
 #!/bin/bash
-export ROS_IP=$1
-export ROS_MASTER=$2
-export ROS_MASTER_URI=http://$ROS_MASTER:11311
 if [ $ROS_IP = $ROS_MASTER ]
 then
 gnome-terminal --window-with-profile=keep -e "roscore"
@@ -23,8 +20,8 @@ gnome-terminal --window-with-profile=keep -e "rosrun traverse getyaw.py"
 #sleep 0.5
 #gnome-terminal --window-with-profile=keep -e python "./miniproject_src/vision/newvision2.py"
 sleep 0.5
-rosparam set /pid_node/Kp $3
-rosparam set /pid_node/Kd $4
+rosparam set /pid_node/Kp $1
+rosparam set /pid_node/Kd $2
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun pid controller"
 sleep 0.5
