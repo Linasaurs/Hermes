@@ -13,10 +13,7 @@ gnome-terminal --window-with-profile=keep -e "rosrun traverse getyaw.py"
 #sleep 0.5
 #gnome-terminal --window-with-profile=keep -e python "./miniproject_src/vision/newvision2.py"
 sleep 0.5
-rosparam set /pid_node/Kp $3
-rosparam set /pid_node/Kd $4
-sleep 0.5
-gnome-terminal --window-with-profile=keep -e "rosrun pid controller"
+gnome-terminal --window-with-profile=keep -e "rosrun pid controller _Kp:=$3 _Kd:=$4 _upper_limit:=126 _lower_limit:=-126"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rostopic pub /setpoint std_msgs/Float64 30"
 sleep 0.5
