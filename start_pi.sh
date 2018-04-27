@@ -3,6 +3,8 @@ gnome-terminal --window-with-profile=keep -e "roscore"
 sleep 2
 gnome-terminal --window-with-profile=keep -e "rosrun network communication.py $1 $2"
 sleep 0.5
+gnome-terminal --window-with-profile=keep -e "rosrun vision ocr.py"
+sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun traverse imu.py"
