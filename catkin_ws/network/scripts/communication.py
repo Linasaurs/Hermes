@@ -12,23 +12,23 @@ def send_target(data):
     global socket_send
     data.data = "target " + data.data
     rospy.loginfo("I sent: %s",data.data)
-    socket_send.send("%s" % messagedata)
+    socket_send.send("%s" % data.data)
 
 def send_message(data):
     global socket_send
     data.data = "message " + data.data
     rospy.loginfo("I sent: %s",data.data)
-    socket_send.send("%s" % messagedata)
+    socket_send.send("%s" % data.data)
 
 def send_status(data):
     global socket_send
     data.data = "status " + data.data
     rospy.loginfo("I sent: %s",data.data)
-    socket_send.send("%s" % messagedata)
+    socket_send.send("%s" % data.data)
 
 def rec_func(data):
-    rospy.loginfo("I heard: %s",data.data)
-    words = data.data.split()
+    rospy.loginfo("I heard: %s",data)
+    words = data.split()
     received =  " ".join(words[1:])
     if words[0] == "target":
         pub_target.publish(received)
@@ -48,9 +48,10 @@ if __name__ == '__main__':
     global socket_rec
     my_ip = sys.argv[1]
     port_send= "4444"
-    socket_send.bind("tcp://*:%s" % port_send)
+    socket_send.bind("tcp://"+my_ip+":%s" % port_send)
     other_ip = sys.argv[2]
-    port_rec ="5555"
+    port_rec ="4444"
+    socket_rec.setsockopt(zmq.SUBSCRIBE, "")
     socket_rec.connect("tcp://"+other_ip+":%s" % port_rec)
 
     rospy.init_node('comm', anonymous=True)
