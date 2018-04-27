@@ -1,7 +1,7 @@
 #!/bin/bash
 gnome-terminal --window-with-profile=keep -e "roscore"
 sleep 2
-gnome-terminal --window-with-profile=keep -e "rosrun network communication.py $1"
+gnome-terminal --window-with-profile=keep -e "rosrun network communication.py $1 $2"
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun rosserial_python serial_node.py /dev/ttyACM0 _baud:=115200"
 sleep 0.5
@@ -13,8 +13,8 @@ gnome-terminal --window-with-profile=keep -e "rosrun traverse getyaw.py"
 #sleep 0.5
 #gnome-terminal --window-with-profile=keep -e python "./miniproject_src/vision/newvision2.py"
 sleep 0.5
-rosparam set /pid_node/Kp $2
-rosparam set /pid_node/Kd $3
+rosparam set /pid_node/Kp $3
+rosparam set /pid_node/Kd $4
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun pid controller"
 sleep 0.5
