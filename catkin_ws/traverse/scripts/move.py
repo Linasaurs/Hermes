@@ -128,8 +128,8 @@ class control:
 			#self.move = -self.move
 			#self.turn_left(int(self.standardspeed * self.move/self.maxvalue))
 			speed = int(self.standardspeed)
-			#turn = int(interp(self.move,[-126,0],[0,self.standardspeed] ))
-			turn = int(interp(self.move,[0,126],[self.standardspeed,30] ))
+			#turn = int(interp(self.move,[-1000,0],[0,self.standardspeed] ))
+			turn = int(interp(self.move,[0,1000],[self.standardspeed,30] ))
 
 
 			rospy.loginfo('Left ')
@@ -147,8 +147,8 @@ class control:
 		elif self.move < 0:				#Move forward towards box --Right
 			#self.turn_right(int(self.standardspeed * self.move/self.maxvalue))
 			speed = int(self.standardspeed)
-			#turn = int(interp(self.move,[0,126],[self.standardspeed,0] ))
-			turn = int(interp(self.move,[-126,0],[30,self.standardspeed] ))					
+			#turn = int(interp(self.move,[0,1000],[self.standardspeed,0] ))
+			turn = int(interp(self.move,[-1000,0],[30,self.standardspeed] ))					
 
 			rospy.loginfo('Right ')
 			rospy.loginfo('Speed: ' +str(self.standardspeed))

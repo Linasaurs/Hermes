@@ -1,12 +1,7 @@
 #!/bin/bash
-if [ $ROS_IP = $ROS_MASTER ]
-then
 gnome-terminal --window-with-profile=keep -e "roscore"
 sleep 2
-gnome-terminal --window-with-profile=keep -e "rosrun network communication.py 1"
-else
-gnome-terminal --window-with-profile=keep -e "rosrun network communication.py 2"
-fi
+gnome-terminal --window-with-profile=keep -e "rosrun network communication.py $1"
 #sleep 0.5
 #gnome-terminal --window-with-profile=keep -e "roslaunch jetson_csi_cam jetson_csi_cam.launch width:=640 height:=360 fps:=16"
 sleep 0.5
@@ -20,8 +15,8 @@ gnome-terminal --window-with-profile=keep -e "rosrun traverse getyaw.py"
 #sleep 0.5
 #gnome-terminal --window-with-profile=keep -e python "./miniproject_src/vision/newvision2.py"
 sleep 0.5
-rosparam set /pid_node/Kp $1
-rosparam set /pid_node/Kd $2
+rosparam set /pid_node/Kp $2
+rosparam set /pid_node/Kd $3
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun pid controller"
 sleep 0.5
