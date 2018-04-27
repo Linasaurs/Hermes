@@ -137,8 +137,12 @@ class control:
 			rospy.loginfo('Turn: ' + str(int(turn)))
 			rospy.loginfo('Move: ' +str(self.move))
 
-			command_left = chr(0xC9)
-			command_right = chr(0xC1)
+			if reverse == "1":
+				command_left = chr(0xC2)
+				command_right = chr(0xCA)				
+			else:
+				command_left = chr(0xC9)
+				command_right = chr(0xC1)
 			ser.write(command_left)
 			ser.write(chr(turn))
 			ser.write(command_right)
@@ -154,9 +158,13 @@ class control:
 			rospy.loginfo('Speed: ' +str(self.standardspeed))
 			rospy.loginfo('Turn: ' +str(int(turn)))
 			rospy.loginfo('Move: ' + str(self.move))
-
-			command_left = chr(0xC9)
-			command_right = chr(0xC1)
+			
+			if reverse == "1":
+				command_left = chr(0xC2)
+				command_right = chr(0xCA)				
+			else:
+				command_left = chr(0xC9)
+				command_right = chr(0xC1)
 			ser.write(command_left)
 			ser.write(chr(speed))
 			ser.write(command_right)
@@ -333,6 +341,7 @@ class control:
  
 if __name__ == '__main__':
 	try:
+		reverse = sys.argv[1]
 		y = control()
 		y.run()
 	except rospy.ROSInterruptException:
