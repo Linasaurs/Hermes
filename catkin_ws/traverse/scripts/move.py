@@ -293,36 +293,36 @@ class control:
 
 
 	#def rotate_left(speed):
-    #	command_left = chr(0xC2)
-    #	command_right = chr(0xC9)
+	#	command_left = chr(0xC2)
+	#	command_right = chr(0xC9)
    	#	ser.write(command_left)
-    #	ser.write(chr(speed))
-    #	ser.write(command_right)
-    #	ser.write(chr(speed))
+	#	ser.write(chr(speed))
+	#	ser.write(command_right)
+	#	ser.write(chr(speed))
  
 	#def rotate_right(speed):
-    #	command_left = chr(0xC1)
-    #	command_right = chr(0xCA)
-    #	ser.write(command_left)
-    #	ser.write(chr(speed))
-    #	ser.write(command_right)
+	#	command_left = chr(0xC1)
+	#	command_right = chr(0xCA)
+	#	ser.write(command_left)
+	#	ser.write(chr(speed))
+	#	ser.write(command_right)
    	#	ser.write(chr(speed))
  
 	#def turn_right(speed):
-    #	command_left = chr(0xC1)
-    #	command_right = chr(0xCA)
+	#	command_left = chr(0xC1)
+	#	command_right = chr(0xCA)
    	#	ser.write(command_left)
   	#	ser.write(chr(speed))
    	#	ser.write(command_right)
    	#	ser.write(chr(speed))
 
 	#def turn_left(speed):
-    #	command_left = chr(0xC2)
-    #	command_right = chr(0xC9)
-    #	ser.write(command_left)
-    #	ser.write(chr(speed))
-    #	ser.write(command_right)
-    #	ser.write(chr(speed))
+	#	command_left = chr(0xC2)
+	#	command_right = chr(0xC9)
+	#	ser.write(command_left)
+	#	ser.write(chr(speed))
+	#	ser.write(command_right)
+	#	ser.write(chr(speed))
  
 
 
@@ -342,6 +342,7 @@ class control:
 if __name__ == '__main__':
 	try:
 		reverse = sys.argv[1]
+		sides= sys.argv[2]
 		y = control()
 		y.run()
 	except rospy.ROSInterruptException:
