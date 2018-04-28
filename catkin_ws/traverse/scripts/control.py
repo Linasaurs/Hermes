@@ -10,6 +10,8 @@ class control:
 		rospy.init_node('control', anonymous=True)
 		rospy.Subscriber("vision_topic", Int32, self.vision)
 		rospy.Subscriber("sonic_front", String, self.distance_to_wall)
+		rospy.Subscriber("Name_in_msg", String, self.Message_recipient)
+		rospy.Subscriber("Name_in_Vision", String, self.Vision_name)
 		self.pub = rospy.Publisher('control_topic', Int32, queue_size=10)		
 
 
@@ -23,6 +25,8 @@ class control:
 
  		self.distance = '0'
 		self.detection = 2
+		self.msg_recipient = None
+		self.person_detected = None
 		#self.yaw = 0
 		#self.read_yaw = 0
 		#self.maxvalue = 400.0
@@ -30,7 +34,12 @@ class control:
 		
 		self.publish()
 
+	def Message_recipient(self, data):
+		self.msg_recipient = data.data
 
+
+	def Vision_name(self, data):
+		self.person_detected = data.data
 
 	def distance_to_wall(self, data):
 		#output = StringIO.StringIO()
@@ -59,7 +68,8 @@ class control:
 
 			if self.distance > x and self.detection == 0:
 				decision = 3
-			elif self.distance > x and self.detection == 1:
+			elif self.distance > x and self.msg_recipient == self.person_detected:  #Use this or the commented elif depending on Lina's code whether she send the name of the person detected or a value 0 or 1
+			#elif self.distance > x and self.detection == 1:
 				decision = 1
 			elif self.distance > x and self.detection == 2:
 				decision = 2
