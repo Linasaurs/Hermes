@@ -47,13 +47,17 @@ class control:
 		ser.write(command_right)
 		ser.write(chr(speed))
  
-	def forward(self, speed):
-		command_left = chr(0xC1)
-		command_right = chr(0xC9)
+	def forward(self, speed_left,speed_right):
+		if reverse == "1":
+			command_left = chr(0xC2)
+			command_right = chr(0xCA)				
+		else:
+			command_left = chr(0xC9)
+			command_right = chr(0xC1)
 		ser.write(command_left)
-		ser.write(chr(speed))
+		ser.write(chr(speed_left))
 		ser.write(command_right)
-		ser.write(chr(speed))
+		ser.write(chr(speed_right))
  
 	def stop(self):
 		command_left = chr(0xC2)
@@ -137,16 +141,7 @@ class control:
 			rospy.loginfo('Turn: ' + str(int(turn)))
 			rospy.loginfo('Move: ' +str(self.move))
 
-			if reverse == "1":
-				command_left = chr(0xC2)
-				command_right = chr(0xCA)				
-			else:
-				command_left = chr(0xC9)
-				command_right = chr(0xC1)
-			ser.write(command_left)
-			ser.write(chr(turn))
-			ser.write(command_right)
-			ser.write(chr(speed))
+			self.forward(turn,speed)
 
 		elif self.move < 0:				#Move forward towards box --Right
 			#self.turn_right(int(self.standardspeed * self.move/self.maxvalue))
@@ -159,19 +154,10 @@ class control:
 			rospy.loginfo('Turn: ' +str(int(turn)))
 			rospy.loginfo('Move: ' + str(self.move))
 			
-			if reverse == "1":
-				command_left = chr(0xC2)
-				command_right = chr(0xCA)				
-			else:
-				command_left = chr(0xC9)
-				command_right = chr(0xC1)
-			ser.write(command_left)
-			ser.write(chr(speed))
-			ser.write(command_right)
-			ser.write(chr(turn))
+			self.forward(speed,turn)
 
 		else :
-			self.forward(int(self.standardspeed))
+			self.forward(int(self.standardspeed),int(self.standardspeed))
 			rospy.loginfo('Move: ' +str(self.move))
 
 	def move_left(self):
