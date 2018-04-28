@@ -15,7 +15,7 @@ frameWidth = 900
 def detect_face(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    face_cascade = cv2.CascadeClassifier('opencv-files/haarcascade_frontalface_alt.xml')
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5);
 
