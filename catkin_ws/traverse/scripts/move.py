@@ -162,6 +162,7 @@ class control:
 
 	def yaw_rotate(degrees,direction,speed):
 		if direction == "counter":
+			self.rotate_left(35)
 			if 180-self.starting_yaw<degrees:
 				remaining =degrees-(180-self.starting_yaw)
 				end = 180
@@ -175,27 +176,9 @@ class control:
 				
 			else:
 				end = self.starting_yaw+degrees
-				self.rotate_left(35)
 				while self.yaw<end:
 					if self.yaw>end or 180-self.yaw>355
-						break	
-				
-		
-		if self.yaw > -90 and self.yaw < -1:
-			while self.yaw < 0 :
-				self.rotate_left(35)
-			while  abs(self.yaw - 0) < 90 - abs(self.starting_yaw-0) :
-				self.rotate_left(35)
-		elif self.yaw > 89 and self.yaw < 179 :
-			#while self.yaw < 179 or self.yaw > 0 :
-			while self.yaw > 0 :
-				self.rotate_left(35)
-			
-			while abs(self.yaw + 179) < 90 - abs(179 - self.starting_yaw) :
-				self.rotate_left(35)
-		else :
-			while abs(self.yaw - self.starting_yaw) < 90 :
-				self.rotate_left(35)
+						break
 				
 				
 
