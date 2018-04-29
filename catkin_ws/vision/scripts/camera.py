@@ -39,7 +39,6 @@ def predict(test_img):
 
         if (confidence > 75):
             print ("Unkown")
-            pub.publish("Unkown")
         else:
             label_text = subjects[label]
             # draw a rectangle around face detected
@@ -50,7 +49,6 @@ def predict(test_img):
             pub.publish(label_text)
     else:
         print ("Unkown")
-        pub.publish("Unkown")
 
     return img
     
