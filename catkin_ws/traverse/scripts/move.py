@@ -329,6 +329,7 @@ if __name__ == '__main__':
 	try:
 		reverse = sys.argv[1]
 		sides= sys.argv[2]
+		degrees = 360.0/int(sides)
 		y = control()
 		y.run()
 	except rospy.ROSInterruptException:
