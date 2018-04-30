@@ -32,7 +32,7 @@ class control:
 		self.message = "None"
 		self.other_target = "None"
 		self.other_message = "None"
-		self.distance_threshold = 30
+		self.distance_threshold = int(sys.argv[1])
 		self.theMostRandomVariable = 0 #look at the target_detected and message_detected
 
 		rospy.spin()
