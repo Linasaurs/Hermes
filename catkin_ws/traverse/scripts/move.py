@@ -160,24 +160,24 @@ class control:
 			self.forward(int(self.standardspeed),int(self.standardspeed))
 			rospy.loginfo('Move: ' +str(self.move))
 
+	def yaw_turn(self,degrees,direction):	
+		if direction == "counter":	
+			if 180-self.starting_yaw<degrees:
+				remaining =degrees-(180-self.starting_yaw)
+				end = -180+remaining
+				while yaw>0:
+					1+1
+				while yaw<=end:
+					1+1		
+			else:
+				end = self.starting_yaw+degrees
+				while yaw<=end:
+					1+1
+
 	def move_left(self):
 		print self.starting_yaw
-		if self.yaw > -90 and self.yaw < -1:
-			while self.yaw < 0 :
-				self.rotate_left(35)
-			while  abs(self.yaw - 0) < 90 - abs(self.starting_yaw-0) :
-				self.rotate_left(35)
-		elif self.yaw > 89 and self.yaw < 179 :
-			#while self.yaw < 179 or self.yaw > 0 :
-			while self.yaw > 0 :
-				self.rotate_left(35)
-			
-			while abs(self.yaw + 179) < 90 - abs(179 - self.starting_yaw) :
-				self.rotate_left(35)
-		else :
-			while abs(self.yaw - self.starting_yaw) < 90 :
-				self.rotate_left(35)
-
+		self.rotate_left(35)
+		self.yaw_turn(degrees,"counter")
 		self.stop()
 		#rospy.sleep(2)
 		print self.yaw
