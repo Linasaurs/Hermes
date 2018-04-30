@@ -60,6 +60,9 @@ class control:
 			print "distance: ", distance
 			self.pub_motion.publish("forward")
 			print "motion: forward"
+		elif self.state == "pause":
+			self.pub_motion.publish("pause")
+			print "motion: pause"			
 
 	def face_detected_call(self,data):
 		if data.data == self.target:
