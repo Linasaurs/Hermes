@@ -18,7 +18,7 @@ ser = serial.Serial('/dev/ttyS0', 19200, timeout = 1)
 class control:
 	def __init__(self):
 		self.move = 0
-		self.cn = 7
+		self.cn = "pause"
 		self.yaw = 0
 		self.read_yaw = 0
 		self.maxvalue = 400.0
@@ -28,7 +28,7 @@ class control:
 	
 		rospy.init_node('move_dagu', anonymous=True)
 		rospy.Subscriber("control_effort", Float64, self.bigfn)
-		rospy.Subscriber("control_topic", Int32, self.control)
+		rospy.Subscriber("motion", String, self.control)
 		rospy.Subscriber("yaw_topic", Float64, self.ret_yaw)
 		rospy.Subscriber("debug_signal", String, self.get_debug_signal)
 
@@ -110,10 +110,7 @@ class control:
 	#	if cn == 0:
 
 	def control(self, data):
-		output = StringIO.StringIO()
-		output.write(data);
-		data = float(output.getvalue().split()[1]);
-		self.cn = data
+		self.cn = data.data
 
 	def ret_yaw(self, data):		
 		output = StringIO.StringIO()
@@ -253,26 +250,28 @@ class control:
 
 
 	def run(self):
-		self.cn = 2 #mazhar
+		self.cn = "pause" #mazhar
 		rate = rospy.Rate(10)
 		while not rospy.is_shutdown():
 			if (self.stp == 1):
 				self.stop()
 				break
-			rospy.loginfo('control signal: ' +str(self.cn))
+			rospy.loginfo('control signal: ' +self.cn)
 			#while (self.read_yaw==0):
 			#		xyzsdff=0
 			self.starting_yaw = self.yaw
-			if self.cn == 2:					#Move forward towards box --Left
+			if self.cn == "forward":					#Move forward towards box --Left
 				self.move_forward()
 
-			elif self.cn == 4 :							#Rotate Left
+			elif self.cn == "turn_left":							#Rotate Left
 				self.move_left()
 
-			elif self.cn == 100 :							#Rotate Right
+			elif self.cn == "turn_right" :							#Rotate Right
 				self.move_right()
 
-			else :
+			elif self.cn == "pause"  :
+				self.stop()
+			else:
 				self.stop()
 
 		rate.sleep() 

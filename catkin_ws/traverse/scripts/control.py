@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import Int32
 from std_msgs.msg import String
 import StringIO
 import numpy as np
@@ -8,88 +7,105 @@ import numpy as np
 class control:
 	def __init__(self):
 		rospy.init_node('control', anonymous=True)
-		rospy.Subscriber("vision_topic", Int32, self.vision)
-		rospy.Subscriber("sonic_front", String, self.distance_to_wall)
-		rospy.Subscriber("Name_in_msg", String, self.Message_recipient)
-		rospy.Subscriber("Name_in_Vision", String, self.Vision_name)
-		self.pub = rospy.Publisher('control_topic', Int32, queue_size=10)		
-
-
-
-
-
-		#rospy.init_node('control', anonymous=True)
-		#self.pub = rospy.Publisher('control_topic', Int32, queue_size=10)
-		#rospy.Subscriber("distance_to_box", Int32, self.distance_to_box)
-		#rospy.Subscriber("arrow_direction", Int32, self.arrow_direction)
-
- 		self.distance = '0'
-		self.detection = 2
-		self.msg_recipient = None
-		self.person_detected = None
-		#self.yaw = 0
-		#self.read_yaw = 0
-		#self.maxvalue = 400.0
-		#self.standardspeed = 50.0
 		
-		self.publish()
+		rospy.Subscriber("sonic_front", String, self.sonic_front_call)
+		rospy.Subscriber("face_detected", String, self.face_detected_call)
+		rospy.Subscriber("target_detected", String, self.target_detected_call)
+		rospy.Subscriber("message_detected", String, self.message_detected_call)
+		rospy.Subscriber("face_box_detected", String, self.read_request_call)
+		rospy.Subscriber("message_box_detected", String, self.read_request_call)
+		rospy.Subscriber("other_target", String, self.other_target_call)		
+		rospy.Subscriber("other_message", String, self.other_message_call)
+		rospy.Subscriber("other_status", String, self.other_status_call)
+		rospy.Subscriber("speak_done", String, self.speak_done_call)
 
-	def Message_recipient(self, data):
-		self.msg_recipient = data.data
+		self.pub_motion = rospy.Publisher('motion', String, queue_size=10)
+		self.pub_target = rospy.Publisher('my_target', String, queue_size=10)
+		self.pub_message = rospy.Publisher('my_message', String, queue_size=10)	
+		self.pub_status = rospy.Publisher('my_status', String, queue_size=10)		
+		self.pub_speak = rospy.Publisher('speak', String, queue_size=10)	
 
+		self.motion = "woke_up"
+		self.state = "woke_up"
+		self.state_after_speak = state
+		self.target = "None"
+		self.message = "None"
+		self.other_target = "None"
+		self.other_message = "None"
+		self.distance_threshold = 30
+		self.theMostRandomVariable = 0 #look at the target_detected and message_detected
 
-	def Vision_name(self, data):
-		self.person_detected = data.data
+		rospy.spin()
 
-	def distance_to_wall(self, data):
-		#output = StringIO.StringIO()
-		#output.write(data);
-		#data = float(output.getvalue().split()[1]);
-		self.distance=float(data.data)
-		if self.distance < 5:
-			self.distance = 300
+	def sonic_front_call(self, data):
+		distance=float(data.data)
+		if distance < 5:
+			distance = 300
+		if distance < self.distance_threshold:
+			pub_motion.publish("turn_left")			
+			print "motion: turn_left"
+		elif self.state == "searching":
+			print "distance: ", distance
+			pub_motion.publish("forward")
+			print "motion: forward"
 
-	def vision(self, data):
-		output = StringIO.StringIO()
-		output.write(data);
-		data = float(output.getvalue().split()[1]);
-		self.detection=data
+	def face_detected_call(self,data):
+		if data.data == self.target:
+			pub_status.publish("found")
+			print "status: found"
+			pub_motion.publish("pause")
+			print "motion: pause"
+			self.state_after_speak = "going_to_mailbox"
+			self.state = "speaking"
+			print "state: ", state
+			pub_speak.publish(self.message)
+			self.target = "None" 
+			self.message = "None"
+		else:
+			print "face detected not the target, continue the search"
+			pub_motion.publish("forward")
+			print "motion: forward"
 
-## detection = 0 : mailbox detected, reading message if there any
-## detection = 1 : Face detected, read out message
-## detection = 2 : Nothing detected
+	def target_detected_call(self,data):
+		self.target = data.data
+		print "target: ", self.target
+		pub_target.publish(data.data)
+		self.state_after_speak = "searching"
+		self.state = "speaking"
+		print "state: ", state
+		pub_speak.publish("I will deliver to " + self.target)
+		self.theMostRandomVariable = 1
 
-
-
-	def publish(self):
-
-		x = 50
-		while not rospy.is_shutdown():
-
-			if self.distance > x and self.detection == 0:
-				decision = 3
-			elif self.distance > x and self.msg_recipient == self.person_detected:  #Use this or the commented elif depending on Lina's code whether she send the name of the person detected or a value 0 or 1
-			#elif self.distance > x and self.detection == 1:
-				decision = 1
-			elif self.distance > x and self.detection == 2:
-				decision = 2
-			elif self.distance < x and self.detection == 2:
-				decision = 4 #decision = 3 USE 4 for ROTATE; 3 MAKES IT STOP FOR TESTING PURPOSES
-			elif self.distance > x:
-				decision = 0
-
-	# decision = "hello world %s" % rospy.get_time()
-			rospy.loginfo("distance = " + str(self.distance))
-			rospy.loginfo("detection = " + str(self.detection))
-			rospy.loginfo(decision)
-			self.pub.publish(decision)
+	def message_detected_call (self,data):
+		self.message = data.data
+		print "message: ", self.message
+		pub_message.publish(data.data)
+		while (self.theMostRandomVariable != 1):
+			1+1
+		self.state_after_speak = "searching"
+		self.state = "speaking"
+		print "state: ", state
+		pub_speak.publish("The following message: " + self.message)
+		self.theMostRandomVariable = 0
 			
+		
+	def read_requested_call(self,data):
+		self.state = "reading"
+		pub_motion.publish("pause")
+		print "motion: pause"
 
-## decision = 0 : Move Forward  pid   NOT USED
-## decision = 1 : DON'T MOVE    Face detected read out msg
-## decision = 2 : Move Forward     
-## decision = 3 : DON'T MOVE	check mailbox   read msg and person
-## decision = 4 : Rotate Left
+	def other_target(self,data):
+		self.other_target = data.data
+
+	def other_message(self,data):
+		self.other_message = data.data
+
+	def other_status(self,data):
+		1+1 #TODO
+
+	def speak_done_call(self,data):
+			state = state_before_speak
+			print "state: " , state_before_speak
 
 if __name__ == '__main__':
 	try:
