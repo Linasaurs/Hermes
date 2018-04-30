@@ -23,7 +23,7 @@ gnome-terminal --window-with-profile=keep -e "rostopic pub /setpoint std_msgs/Fl
 sleep 0.5
 gnome-terminal --window-with-profile=keep -e "rosrun traverse pid.py"
 sleep 0.5
-gnome-terminal --window-with-profile=keep -e "rosrun traverse control.py $6"
+gnome-terminal --window-with-profile=keep -e "rosrun traverse control.py $6" #distance_threshold
 sleep 0.5
-gnome-terminal --window-with-profile=keep -e "rosrun traverse move.py $7 $8 $9"
+gnome-terminal --window-with-profile=keep -e "rosrun traverse move.py $7 $8 $9" #reverse, sides, speed
 
