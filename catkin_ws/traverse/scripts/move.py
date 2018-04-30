@@ -22,7 +22,7 @@ class control:
 		self.yaw = 0
 		self.read_yaw = 0
 		self.maxvalue = 400.0
-		self.standardspeed = 60.0
+		self.standardspeed = sys.argv[2]
 		self.stp = 0;
 		self.starting_yaw = 0
 	
