@@ -165,13 +165,13 @@ class control:
 			if 180-self.starting_yaw<degrees:
 				remaining =degrees-(180-self.starting_yaw)
 				end = -180+remaining
-				while yaw>0:
+				while self.yaw>0:
 					1+1
-				while yaw<=end:
+				while self.yaw<=end:
 					1+1		
 			else:
 				end = self.starting_yaw+degrees
-				while yaw<=end:
+				while self.yaw<=end:
 					1+1
 
 	def move_left(self):
