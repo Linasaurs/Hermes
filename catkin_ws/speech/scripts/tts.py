@@ -14,10 +14,10 @@ def read(data):
 
 def listener():
 
-    rospy.Subscriber("read_aloud", String, read)   
+    rospy.Subscriber("speak", String, read)   
     rospy.spin()
 
 if __name__ == '__main__':
 	rospy.init_node('tts', anonymous=True)
-	pub = rospy.Publisher('read_aloud_done', String, queue_size=10)
+	pub = rospy.Publisher('speak_done', String, queue_size=10)
 	listener()
