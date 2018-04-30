@@ -73,7 +73,7 @@ class control:
 			self.state_after_speak = "going_to_mailbox"
 			self.state = "speaking"
 			print "state: ", state
-			self.pub_speak.publish(self.message)
+			self.pub_speak.publish("Hi " + self.target + ", " + self.message)
 			self.target = "None" 
 			self.message = "None"
 		else:
@@ -100,7 +100,7 @@ class control:
 		self.state_after_speak = "searching"
 		self.state = "speaking"
 		print "state: ", state
-		self.pub_speak.publish("The following message: " + self.message)
+		self.pub_speak.publish(". The following message, " + self.message)
 		self.theMostRandomVariable = 0
 			
 		
