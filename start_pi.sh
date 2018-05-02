@@ -8,7 +8,7 @@ then
 else
     CMD="roscore"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
-    sleep 2
+    sleep 5
     CMD="rosrun network communication.py $1 $2"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
