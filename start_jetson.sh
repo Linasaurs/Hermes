@@ -1,4 +1,7 @@
 #!/bin/bash
+# to ssh without password
+# ssh-keygen
+# ssh-copy-id remote_user@remote_ip
 CMD="roscore"
 gnome-terminal --window-with-profile=keep -e "ssh -t $1@$2 source ~/.bashrc; echo '$CMD'; '$CMD'"
 sleep 2
