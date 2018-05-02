@@ -1,1 +1,2 @@
-pacmd set-default-sink "bluez_sink.46_4C_57_04_BC_F1"
+#!/bin/bash
+pacmd set-default-sink "bluez_sink.EF_F0_DE_A2_14_8D"
