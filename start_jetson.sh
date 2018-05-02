@@ -2,7 +2,7 @@
 # to ssh without password
 # ssh-keygen
 # ssh-copy-id remote_user@remote_ip
-if [$1 = "help"]
+if [ $1 = "help" ]
 then
     echo "my_ip other_ip kp kd side_distance front_distance reverse? sides forward_speed"
 else
