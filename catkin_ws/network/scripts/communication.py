@@ -14,8 +14,8 @@ def send_message(data):
 	rospy.loginfo("I sent: %s",data.data)
 	socket_send.send("%s" % data.data)
 
-def send_status(data):
-	data.data = "status " + data.data
+def send_found(data):
+	data.data = "found " + data.data
 	rospy.loginfo("I sent: %s",data.data)
 	socket_send.send("%s" % data.data)
 
@@ -27,8 +27,8 @@ def rec_func(data):
 		pub_target.publish(received)
 	elif words[0] == "message":
 		pub_message.publish(received)
-	elif words[0] == "status":
-		pub_status.publish(received)
+	elif words[0] == "found":
+		pub_found.publish(received)
 
 def listener():
 	while True:
@@ -51,10 +51,10 @@ if __name__ == '__main__':
   
 	pub_target = rospy.Publisher('other_target', String, queue_size=10)
 	pub_message = rospy.Publisher('other_message', String, queue_size=10)
-	pub_status = rospy.Publisher('other_status', String, queue_size=10)
+	pub_found = rospy.Publisher('other_found', String, queue_size=10)
 
 	rospy.Subscriber('my_target', String, send_target)
 	rospy.Subscriber('my_message', String, send_message)
-	rospy.Subscriber('my_status', String, send_status)
+	rospy.Subscriber('my_found', String, send_found)
 
 	listener()
