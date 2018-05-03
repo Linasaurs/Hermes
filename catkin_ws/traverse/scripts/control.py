@@ -67,13 +67,14 @@ class control:
 			if message[0] == target:
 				message_to_process = message
 				self.message_list.pop(index)
-				print "Message removed:", message
+				print "Message removed:", message_to_process
 				self.state_after_speak = "continue_list"
 				self.state = "speaking"
 				print "state: ", state
-				self.pub_speak.publish("Hi " + self.target + ", message for you, "+ self.message)
+				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_to_process)
 				while self.state != "continue_list":
-					1+1		
+					1+1	
+				self.state = "looping_again"	
 		self.state = "roaming"
 		print "state: ", state					
 
@@ -86,7 +87,6 @@ class control:
 		print "Message added:", [target,message]
 
 	def target_detected_call(self,data):
-		self.add_target_to_list(data.data)
 		print "target: ", self.target
 		self.pub_target.publish(data.data)
 		self.state_after_speak = "speaking"
@@ -96,18 +96,17 @@ class control:
 		self.last_target_read = data.data
 
 	def message_detected_call (self,data):
+		while (self.last_target_read == "None"):
+			1+1
 		self.add_message_to_list(self.last_target_read, data.data)				
 		self.message = data.data
 		print "message: ", self.message
 		self.pub_message.publish(data.data)
-		while (self.last_target_read == "None"):
-			1+1
 		self.state_after_speak = "roaming"
 		self.state = "speaking"
 		print "state: ", state
 		self.pub_speak.publish("The following message, " + self.message)
-		self.last_target_read = "None"
-			
+		self.last_target_read = "None"			
 		
 	def read_request_call(self,data):
 		self.state = "reading"
@@ -118,14 +117,17 @@ class control:
 		self.last_target_received = data.data
 
 	def other_message_call(self,data):
-		self.add_message_to_list(self.last_target_received, data.data)		
+		while (self.last_target_received == "None"):
+			1+1
+		self.add_message_to_list(self.last_target_received, data.data)
+		self.last_target_received = "None"		
 
 	def other_found_call(self,data):
 		self.remove_target_from_list(self,data.data):
 
 	def speak_done_call(self,data):
-			self.state = state_after_speak
-			print "state: " , state_after_speak
+			self.state = self.state_after_speak
+			print "state: " , self.state_after_speak
 
 if __name__ == '__main__':
 	try:
