@@ -83,8 +83,11 @@ class control:
 		self.remove_target_from_list(self,data.data)
 
 	def add_message_to_list(self,target, message):
-		self.message_list.append([target,message])
-		print "Message added:", [target,message]
+		if  self.message_list.count([target,message])>0:
+			self.message_list.append([target,message])
+			print "Message added:", [target,message]
+		else
+			print "Message:", [target,message], " not added, for it is a duplicate, that has not yet been delivered."
 
 	def target_detected_call(self,data):
 		print "target: ", self.target
@@ -92,7 +95,7 @@ class control:
 		self.state_after_speak = "speaking"
 		self.state = "speaking"
 		print "state: ", state
-		self.pub_speak.publish("I will deliver to " + self.target)
+		self.pub_speak.publish("We will deliver to " + self.target)
 		self.last_target_read = data.data
 
 	def message_detected_call (self,data):
