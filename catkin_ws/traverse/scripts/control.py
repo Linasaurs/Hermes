@@ -83,7 +83,7 @@ class control:
 		self.remove_target_from_list(self,data.data)
 
 	def add_message_to_list(self,target, message):
-		if  self.message_list.count([target,message])>0:
+		if  self.message_list.count([target,message])==0:
 			self.message_list.append([target,message])
 			print "Message added:", [target,message]
 		else
