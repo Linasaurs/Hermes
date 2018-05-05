@@ -63,39 +63,41 @@ class control:
 			print "motion: forward"			
 
 	def remove_target_from_list(self,target):
-		for index, message in enumerate(self.message_list)		
+		for index, message in enumerate(self.message_list):		
 			if message[0] == target:
 				message_to_process = message
 				self.message_list.pop(index)
-				print "Message removed:", message_to_process
+				print "Message removed: ", message_to_process
 				self.state_after_speak = "continue_list"
 				self.state = "speaking"
-				print "state: ", state
-				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_to_process)
+				print "state: ", self.state
+				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_to_process[1])
 				while self.state != "continue_list":
-					1+1	
-				self.state = "looping_again"	
+					print 1+1	
+				self.state = "looping_again"
+				print "state: ", self.state	
 		self.state = "roaming"
-		print "state: ", state					
+		print "state: ", self.state					
 
 	def face_detected_call(self,data):
-		self.pub_found(data.data)
-		self.remove_target_from_list(self,data.data)
+		print "Face detected: ", data.data
+		self.pub_found.publish(data.data)
+		self.remove_target_from_list(data.data)
 
 	def add_message_to_list(self,target, message):
 		if  self.message_list.count([target,message])==0:
 			self.message_list.append([target,message])
-			print "Message added:", [target,message]
-		else
-			print "Message:", [target,message], " not added, for it is a duplicate, that has not yet been delivered."
+			print "Message added: ", [target,message]
+		else:
+			print "Message: ", [target,message], " not added, for it is a duplicate, that has not yet been delivered."
 
 	def target_detected_call(self,data):
-		print "target: ", self.target
+		print "target: ", data.data
 		self.pub_target.publish(data.data)
 		self.state_after_speak = "speaking"
 		self.state = "speaking"
-		print "state: ", state
-		self.pub_speak.publish("We will deliver to " + self.target)
+		print "state: ", self.state
+		self.pub_speak.publish("We will deliver to " + data.data)
 		self.last_target_read = data.data
 
 	def message_detected_call (self,data):
@@ -107,12 +109,13 @@ class control:
 		self.pub_message.publish(data.data)
 		self.state_after_speak = "roaming"
 		self.state = "speaking"
-		print "state: ", state
+		print "state: ", self.state
 		self.pub_speak.publish("The following message, " + self.message)
 		self.last_target_read = "None"			
 		
 	def read_request_call(self,data):
 		self.state = "reading"
+		print "state : ", self.state
 		self.pub_motion.publish("pause")
 		print "motion: pause"
 
@@ -126,11 +129,11 @@ class control:
 		self.last_target_received = "None"		
 
 	def other_found_call(self,data):
-		self.remove_target_from_list(self,data.data):
+		self.remove_target_from_list(data.data)
 
 	def speak_done_call(self,data):
 			self.state = self.state_after_speak
-			print "state: " , self.state_after_speak
+			print "state after speaking: " , self.state_after_speak
 
 if __name__ == '__main__':
 	try:
