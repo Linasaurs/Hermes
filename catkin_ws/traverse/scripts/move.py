@@ -125,7 +125,7 @@ class control:
 			self.stp = 1;
 	
 	def move_forward(self):
-		if self.move > 0:
+		if self.move >= 0:
 			#self.move = -self.move
 			#self.turn_left(int(self.standardspeed * self.move/self.maxvalue))
 			speed = int(self.standardspeed)
