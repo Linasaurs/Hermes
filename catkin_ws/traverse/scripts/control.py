@@ -120,16 +120,26 @@ class control:
 		print "motion: pause"
 
 	def other_target_call(self,data):
+		print "From other, target: ", data.data		
 		self.last_target_received = data.data
 
+	def remove_target_from_list_with_no_speak(self,target):
+		for index, message in enumerate(self.message_list):		
+			if message[0] == target:
+				message_to_process = message
+				self.message_list.pop(index)
+				print "Message removed: ", message_to_process
+
 	def other_message_call(self,data):
+		print "From other, message: ", data.data
 		while (self.last_target_received == "None"):
 			1+1
 		self.add_message_to_list(self.last_target_received, data.data)
 		self.last_target_received = "None"		
 
 	def other_found_call(self,data):
-		self.remove_target_from_list(data.data)
+		print "From other, found: ", data.data
+		self.remove_target_from_list_with_no_speak(data.data)
 
 	def speak_done_call(self,data):
 			self.state = self.state_after_speak
