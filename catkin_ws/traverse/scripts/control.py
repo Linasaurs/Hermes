@@ -9,8 +9,6 @@ class control:
 	def __init__(self):
 		rospy.init_node('control', anonymous=True)
 
-
-		self.motion = "woke_up"
 		self.state = "woke_up"
 		self.state_after_speak = self.state
 		self.message_list = []
@@ -18,7 +16,7 @@ class control:
 		self.last_target_read = "None"
 		self.last_target_received = "None"
 
-		print "motion: ", self.motion
+		print "motion: woke_up"
 		print "state: ", self.state
 
 		rospy.Subscriber("sonic_front", String, self.sonic_front_call)
@@ -63,17 +61,17 @@ class control:
 			print "motion: forward"			
 
 	def remove_target_from_list(self,target):
-		for index, message in enumerate(self.message_list):		
-			if message[0] == target:
-				message_to_process = message
+		for index, message_pair in enumerate(self.message_list):		
+			if message_pair[0] == target:
+				message_pair_to_process = message_pair #pair [target,message]
 				self.message_list.pop(index)
-				print "Message removed: ", message_to_process
+				print "Message removed: ", message_pair_to_process
 				self.state_after_speak = "continue_list"
 				self.state = "speaking"
 				print "state: ", self.state
-				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_to_process[1])
+				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_pair_to_process[1])
 				while self.state != "continue_list":
-					print 1+1	
+					1+1	
 				self.state = "looping_again"
 				print "state: ", self.state	
 		self.state = "roaming"
@@ -128,9 +126,9 @@ class control:
 	def remove_target_from_list_with_no_speak(self,target):
 		for index, message in enumerate(self.message_list):		
 			if message[0] == target:
-				message_to_process = message
+				message_pair_to_process = message
 				self.message_list.pop(index)
-				print "Message removed: ", message_to_process
+				print "Message removed: ", message_pair_to_process
 
 	def other_message_call(self,data):
 		while (self.last_target_received == "None"):
