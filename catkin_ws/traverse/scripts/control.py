@@ -94,11 +94,13 @@ class control:
 	def target_detected_call(self,data):
 		print "target: ", data.data
 		self.pub_target.publish(data.data)
-		self.state_after_speak = "speaking"
+		self.state_after_speak = "continue speaking"
 		self.state = "speaking"
 		print "state: ", self.state
 		self.pub_speak.publish("We will deliver to " + data.data)
-		self.last_target_read = data.data
+		while (self.state != "continue speaking"):
+			1+1		
+        self.last_target_read = data.data
 
 	def message_detected_call (self,data):
 		while (self.last_target_read == "None"):
@@ -131,9 +133,9 @@ class control:
 				print "Message removed: ", message_to_process
 
 	def other_message_call(self,data):
-		print "From other, message: ", data.data
 		while (self.last_target_received == "None"):
 			1+1
+		print "From other, message: ", data.data
 		self.add_message_to_list(self.last_target_received, data.data)
 		self.last_target_received = "None"		
 
