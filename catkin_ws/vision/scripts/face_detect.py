@@ -57,22 +57,46 @@ def predict(test_img):
 	face, rect = detect_face(img)
 
 	#predict the image using our face recognizer
-	if not face is None:
-		label, confidence = face_recognizer.predict(face)
+	labels_detected = {}
+	for i in range(20):
+		if not face is None:
+			label, confidence = face_recognizer.predict(face)
 
-		if (confidence < 75):
-			print ("Unkown", label, confidence)
+			if (confidence < 75):
+				print ("Pushed Unknown", label, confidence)
+				if not "Unknown" in labels_detected:
+					labels_detected["Unknown"] = 1
+				else:
+					labels_detected["Unknown"] += 1
+			else:
+				label_text = subjects[label]
+				# draw a rectangle around face detected
+				#draw_rectangle(img, rect)
+				# draw name of predicted person
+				#draw_text(img, label_text, rect[0], rect[1] - 5)
+				print ("Pushed",label_text)
+				#pub_face.publish(label_text)
+				if not label_text in labels_detected:
+					labels_detected[label_text] = 1
+				else:
+					labels_detected[label_text] += 1
 		else:
-			label_text = subjects[label]
-			# draw a rectangle around face detected
-			#draw_rectangle(img, rect)
-			# draw name of predicted person
-			#draw_text(img, label_text, rect[0], rect[1] - 5)
-			print (label_text)
-			pub_face.publish(label_text)
-	else:
-		print ("No face detected")
+			print ("Pushed No face detected")
+			if not "No face detected" in labels_detected:
+				labels_detected["No face detected"] = 1
+			else:
+				labels_detected["No face detected"] += 1
+			#pub_ocr.publish(filename)
+	
+	answer = max(labels_detected, key=labels_detected.get)
+	
+	if (answer == "No face detected"):
+		print ("Answer: No face detected")
 		pub_ocr.publish(filename)
+	else:
+		print ("Answer:",answer)
+		pub_face.publish(answer)
+				
 
 	return img
 	
