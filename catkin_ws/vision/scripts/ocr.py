@@ -6,8 +6,16 @@ import pytesseract
 import argparse
 import cv2
 import os
-def ocrfn(data):
 
+
+#speaked = "None"
+
+#def speak_done_call(data):
+#	global speaked
+#	speaked = "done"
+
+def ocrfn(data):
+	#global speaked
 	#image = cv2.imread(data.data)
 	image = cv2.imread(data.data)
 	
@@ -19,21 +27,30 @@ def ocrfn(data):
 	#cv2.imshow("gray image", image)
 	#text = pytesseract.image_to_string(image, lang='eng', boxes=False, config = '-c language_model_penalty_non_dict_word=1 -psm=5 -oem=0')
 	
-	MessageAndTarget = text.split()
+	if text != "":
 	
-	target = MessageAndTarget[0]
-	message = " ".join(MessageAndTarget[1:])
+		MessageAndTarget = text.split()
 	
-	#message = text
-	#target = text
+		target = MessageAndTarget[0]
+		message = " ".join(MessageAndTarget[1:])
 	
-	print "Target: ", target
-	print "Message: ", message
+		#message = text
+		#target = text
+	
+		print "Target: ", target
+		print "Message: ", message
 	
 	
-	pub_m.publish(message)
-	pub_t.publish(target)
+		pub_m.publish(message)
+		pub_t.publish(target)
+		
+		#speaked = "not done"
+		#while speaked != "done":
+		#	1+1
+		#rospy.sleep(3)
 
+	else:
+		print "Invalid msg"
 
 
 
@@ -47,6 +64,7 @@ def listener():
     rospy.init_node('ocr', anonymous=True)
 
     rospy.Subscriber("ocr_file", String, ocrfn)   
+    #rospy.Subscriber("speak_done", String, speak_done_call)   
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
