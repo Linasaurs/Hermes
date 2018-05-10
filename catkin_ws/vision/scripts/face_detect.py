@@ -22,29 +22,28 @@ def turn_vision_on_call(data):
 def convert(data):
 	try:
 		global found_msg
-		while found_msg!="yes":
-			1+1
-		found_msg = "no"
-		global filename
-		if (sys.argv[1] == "jetson"):
-			bridge = CvBridge()
-			frame = bridge.imgmsg_to_cv2(data, "bgr8")		
-		elif (sys.argv[1] == "pi"):
-			cap = cv2.VideoCapture(0)
-			ret, frame = cap.read()
+		if found_msg=="yes":
+			found_msg = "no"
+			global filename
+			if (sys.argv[1] == "jetson"):
+				bridge = CvBridge()
+				frame = bridge.imgmsg_to_cv2(data, "bgr8")		
+			elif (sys.argv[1] == "pi"):
+				cap = cv2.VideoCapture(0)
+				ret, frame = cap.read()
 		
-		frame = imutils.resize(frame, width=frameWidth)
-		test_img1 = frame;
-		#cv2.imshow('frame',frame)
-		#perform a prediction
-		#out = cv2.imwrite('capture.jpg', frame)
-		if (sys.argv[1] == "jetson"):
-			out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
-			filename="/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg"
-		elif (sys.argv[1] == "pi"):
-			out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
-			filename="/home/raspi3/catkin_ws/src/vision/scripts/capture.jpg"
-		predicted_img1 = predict(test_img1)
+			frame = imutils.resize(frame, width=frameWidth)
+			test_img1 = frame;
+			#cv2.imshow('frame',frame)
+			#perform a prediction
+			#out = cv2.imwrite('capture.jpg', frame)
+			if (sys.argv[1] == "jetson"):
+				out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
+				filename="/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg"
+			elif (sys.argv[1] == "pi"):
+				out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
+				filename="/home/raspi3/catkin_ws/src/vision/scripts/capture.jpg"
+			predicted_img1 = predict(test_img1)
 
 		
 	except CvBridgeError as e:
@@ -62,7 +61,7 @@ def predict(test_img):
 		if not face is None:
 			label, confidence = face_recognizer.predict(face)
 
-			if (confidence < 75):
+			if (confidence > 75):
 				print ("Pushed Unknown", label, confidence)
 				if not "Unknown" in labels_detected:
 					labels_detected["Unknown"] = 1
@@ -128,6 +127,8 @@ subjects = ["", "Lina", "Mazhar", "Obama"]
 frameWidth = 600
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 
+rospy.init_node('camera', anonymous=True)		
+
 if (sys.argv[1] == "jetson"):
 	face_recognizer.read("/home/nvidia/catkin_ws/src/vision/scripts/weight.xml")
 	rospy.Subscriber("/csi_cam/image_raw", Image, convert)
@@ -136,7 +137,6 @@ elif (sys.argv[1] == "pi"):
 	while True:
 		convert("not supposed to appear")	
 
-rospy.init_node('camera', anonymous=True)		
 rospy.Subscriber("turn_vision_on", String, turn_vision_on_call)   
 pub_face = rospy.Publisher('face_detected', String, queue_size=10)
 pub_ocr = rospy.Publisher('ocr_file', String, queue_size=10)
