@@ -41,7 +41,7 @@ def convert(data):
 				out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
 				filename="/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg"
 			elif (sys.argv[1] == "pi"):
-				out = cv2.imwrite('/home/nvidia/catkin_ws/src/vision/scripts/capture.jpg', frame)
+				out = cv2.imwrite('/home/raspi3/catkin_ws/src/vision/scripts/capture.jpg', frame)
 				filename="/home/raspi3/catkin_ws/src/vision/scripts/capture.jpg"
 			predicted_img1 = predict(test_img1)
 
