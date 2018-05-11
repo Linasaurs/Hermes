@@ -75,7 +75,7 @@ class control:
 				print "state: ", self.state
 				self.pub_speak.publish("Hi " + target + ", message for you, "+ message_to_process[1])
 				while self.state != "continue_list":
-					print 1+1	
+					1+1	
 				self.state = "looping_again"
 				print "state: ", self.state	
 		self.state = "roaming"
@@ -98,12 +98,19 @@ class control:
 
 	def target_detected_call(self,data):
 		print "target: ", data.data
-		self.pub_target.publish(data.data)
-		self.state_after_speak = "speaking"
-		self.state = "speaking"
-		print "state: ", self.state
-		self.pub_speak.publish("We will deliver to " + data.data)
-		self.last_target_read = data.data
+		if data.data != "invalid":
+			self.pub_target.publish(data.data)
+			self.state_after_speak = "speaking"
+			self.state = "speaking"
+			print "state: ", self.state
+			self.pub_speak.publish("We will deliver to " + data.data)
+			self.last_target_read = data.data
+		else:
+			self.pub_target.publish(data.data)
+			self.state_after_speak = "roaming"
+			self.state = "speaking"
+			print "state: ", self.state
+			self.pub_speak.publish("Could not read message")
 
 	def message_detected_call (self,data):
 		global on_box

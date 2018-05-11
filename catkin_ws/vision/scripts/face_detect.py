@@ -63,10 +63,10 @@ def predict(test_img):
 
 			if (confidence > 75):
 				print ("Pushed Unknown", label, confidence)
-				if not "Unknown" in labels_detected:
-					labels_detected["Unknown"] = 1
+				if not "unknown" in labels_detected:
+					labels_detected["unknown"] = 1
 				else:
-					labels_detected["Unknown"] += 1
+					labels_detected["unknown"] += 1
 			else:
 				label_text = subjects[label]
 				# draw a rectangle around face detected
@@ -123,7 +123,7 @@ def detect_face(img):
 #	1+1
 
 filename = "None"
-subjects = ["", "Lina", "Mazhar", "Obama"]
+subjects = ["", "lina", "obama", "mazhar"]
 frameWidth = 600
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 

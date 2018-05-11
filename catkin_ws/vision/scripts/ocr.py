@@ -34,6 +34,9 @@ def ocrfn(data):
 		target = MessageAndTarget[0]
 		message = " ".join(MessageAndTarget[1:])
 	
+	
+		target = ''.join(c.lower() for c in target if not c.isspace())
+	
 		#message = text
 		#target = text
 	
@@ -51,6 +54,8 @@ def ocrfn(data):
 
 	else:
 		print "Invalid msg"
+		pub_m.publish("invalid")
+		pub_t.publish("invalid")
 
 
 

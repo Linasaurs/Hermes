@@ -112,5 +112,5 @@ elif (sys.argv[1] == "pi"):
 	while True:
 		start("not supposed to appear")			
 
-pub = rospy.Publisher('face_box_detected', Float64, queue_size=10)
+pub = rospy.Publisher('face_box_detected', String, queue_size=10)
 rospy.spin()
