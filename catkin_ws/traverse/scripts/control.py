@@ -150,8 +150,9 @@ class control:
 			self.pub_vision.publish("turn vision on");
 
 	def other_target_call(self,data):
-		print "From other, target: ", data.data		
-		self.last_target_received = data.data
+		if data.data != "invalid":
+			print "From other, target: ", data.data		
+			self.last_target_received = data.data
 
 	def remove_target_from_list_with_no_speak(self,target):
 		for index, message in enumerate(self.message_list):		
