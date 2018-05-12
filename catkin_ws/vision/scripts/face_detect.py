@@ -23,11 +23,11 @@ def convert(data):
 		if found_msg=="yes":
 			found_msg = "no"
 			labels_detected = {}
-			for i in range(16):			
+			for i in range(1):			
 				bridge = CvBridge()
 				frame = bridge.imgmsg_to_cv2(data, "bgr8")		
 				frame = imutils.resize(frame, width=frameWidth)
-				test_img = frame;
+				#test_img = frame;
 				#cv2.imshow('frame',frame)
 				#perform a prediction
 				#out = cv2.imwrite('capture.jpg', frame)
@@ -39,9 +39,9 @@ def convert(data):
 					filename="/home/raspi3/catkin_ws/src/vision/scripts/capture.jpg"
 			
 				#make a copy of the image as we don't want to chang original image
-				img = test_img.copy()
+				#img = test_img.copy()
 				#detect face from the image
-				face, rect = detect_face(img)
+				face, rect = detect_face(frame)
 
 				#predict the image using our face recognizer
 				if not face is None:

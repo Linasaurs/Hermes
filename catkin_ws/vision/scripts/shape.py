@@ -19,7 +19,7 @@ def start(data):
 		bridge = CvBridge()
 		frame = bridge.imgmsg_to_cv2(data, "bgr8")	
 		frame = imutils.resize(frame, width=frameWidth)
-		test_img1 = frame;
+		#test_img1 = frame;
 		#cv2.imshow('frame',frame)
 		#perform a prediction
 		#out = cv2.imwrite('capture.jpg', frame)
