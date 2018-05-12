@@ -105,8 +105,8 @@ lower_range = np.array([0, 0, 200], dtype=np.uint8) ##55 and 80
 upper_range = np.array([180, 255, 255], dtype=np.uint8)
 
 if (sys.argv[1] == "jetson"):
-	rospy.Subscriber("/csi_cam/image_raw", Image, start)
+	rospy.Subscriber("/csi_cam/image_raw", Image, start, queue_size = 1)
 elif (sys.argv[1] == "pi"):
-	rospy.Subscriber("/usb_cam/image_raw", Image, start)		
+	rospy.Subscriber("/usb_cam/image_raw", Image, start, queue_size = 1)		
 rospy.spin()
 

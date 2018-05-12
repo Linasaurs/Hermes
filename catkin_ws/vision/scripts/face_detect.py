@@ -125,8 +125,8 @@ pub_ocr = rospy.Publisher('ocr_file', String, queue_size=10)
 
 rospy.Subscriber("turn_vision_on", String, turn_vision_on_call) 
 if (sys.argv[1] == "jetson"):
-	rospy.Subscriber("/csi_cam/image_raw", Image, convert)
+	rospy.Subscriber("/csi_cam/image_raw", Image, convert, queue_size = 1)
 elif (sys.argv[1] == "pi"):
-	rospy.Subscriber("/usb_cam/image_raw", Image, convert)  
+	rospy.Subscriber("/usb_cam/image_raw", Image, convert, queue_size = 1)  
 
 rospy.spin()	
