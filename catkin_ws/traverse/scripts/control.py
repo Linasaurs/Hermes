@@ -97,6 +97,7 @@ class control:
 			print "Message: ", [target,message], " not added, for it is a duplicate, that has not yet been delivered."
 
 	def target_detected_call(self,data):
+		global on_box
 		print "target: ", data.data
 		if data.data != "invalid":
 			self.pub_target.publish(data.data)
@@ -115,8 +116,10 @@ class control:
 			self.pub_speak.publish("Could not read message")
 			while self.state != "roaming":
 				1+1
+			#print "hi", self.state
 			rospy.sleep(3)
 			on_box = "no"
+			#print "hi 2", self.state
 
 	def message_detected_call (self,data):
 		global on_box
@@ -170,7 +173,7 @@ class control:
 
 	def speak_done_call(self,data):
 		self.state = self.state_after_speak
-		print "state after speaking: " , self.state_after_speak
+		print "speak done, state after speak: " , self.state_after_speak
 
 if __name__ == '__main__':
 	try:
