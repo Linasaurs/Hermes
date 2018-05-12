@@ -21,6 +21,10 @@ def convert(data):
 	try:
 		global found_msg
 		if found_msg=="yes":
+			for i in range(8):
+				bridge = CvBridge()
+				frame = bridge.imgmsg_to_cv2(data, "bgr8")		
+				frame = imutils.resize(frame, width=frameWidth)
 			found_msg = "no"
 			labels_detected = {}
 			for i in range(1):			
