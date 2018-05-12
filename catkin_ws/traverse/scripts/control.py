@@ -88,6 +88,7 @@ class control:
 		self.remove_target_from_list(data.data)
 		rospy.sleep(3)
 		on_box = "no"
+		print "on_box :", on_box
 
 	def add_message_to_list(self,target, message):
 		if  self.message_list.count([target,message])==0:
@@ -119,6 +120,7 @@ class control:
 			#print "hi", self.state
 			rospy.sleep(3)
 			on_box = "no"
+			print "on_box :", on_box
 			#print "hi 2", self.state
 
 	def message_detected_call (self,data):
@@ -137,7 +139,8 @@ class control:
 		while self.state != "roaming":
 			1+1
 		rospy.sleep(3)
-		on_box = "no"			
+		on_box = "no"
+		print "on_box :", on_box			
 		
 	def read_request_call(self,data):
 		global on_box
