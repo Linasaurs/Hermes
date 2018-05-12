@@ -100,10 +100,12 @@ class control:
 		print "target: ", data.data
 		if data.data != "invalid":
 			self.pub_target.publish(data.data)
-			self.state_after_speak = "speaking"
+			self.state_after_speak = "speaking_again"
 			self.state = "speaking"
 			print "state: ", self.state
 			self.pub_speak.publish("We will deliver to " + data.data)
+			while self.state != "speaking_again":
+				1+1
 			self.last_target_read = data.data
 		else:
 			self.pub_target.publish(data.data)
