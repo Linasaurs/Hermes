@@ -9,7 +9,7 @@ else
     CMD="rosrun network communication.py $1 $2"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
-    CMD="roslaunch usb_cam usb_cam-test.launch"
+    CMD="roslaunch vision cam.launch"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="rosrun vision shape.py pi"
