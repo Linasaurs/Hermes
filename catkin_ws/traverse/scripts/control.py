@@ -4,8 +4,10 @@ from std_msgs.msg import String
 import StringIO
 import numpy as np
 import sys
+import stringdist
 
 on_box="no"
+subjects = ["", "lina", "obama", "mazhar"]
 
 class control:
 	def __init__(self):
@@ -99,17 +101,25 @@ class control:
 
 	def target_detected_call(self,data):
 		global on_box
-		print "target: ", data.data
 		if data.data != "invalid":
-			self.pub_target.publish(data.data)
+			dist_low = 1000
+			corrected_target = "should not appear"
+			for subject in subjects:
+				dist = stringdist.levenshtein(subject, data.data)
+				if dist < dist_low:
+					dist_low = dist
+					corrected_target = subject
+			print "target: ", corrected_target
+			self.pub_target.publish(corrected_target)
 			self.state_after_speak = "speaking_again"
 			self.state = "speaking"
 			print "state: ", self.state
-			self.pub_speak.publish("We will deliver to " + data.data)
+			self.pub_speak.publish("We will deliver to " + corrected_target)
 			while self.state != "speaking_again":
 				1+1
-			self.last_target_read = data.data
+			self.last_target_read = corrected_target
 		else:
+			print "target: ", data.data
 			self.pub_target.publish(data.data)
 			self.state_after_speak = "roaming"
 			self.state = "speaking"

@@ -75,7 +75,7 @@ def convert(data):
 	
 			answer = max(labels_detected, key=labels_detected.get)
 	
-			if (answer == "No face detected"):
+			if (answer == "No face detected" or answer == "unknown"):
 				print ("Answer: No face detected")
 				pub_ocr.publish(filename)
 			else:
