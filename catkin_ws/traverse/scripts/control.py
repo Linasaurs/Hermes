@@ -111,6 +111,10 @@ class control:
 			self.state = "speaking"
 			print "state: ", self.state
 			self.pub_speak.publish("Could not read message")
+			while self.state != "roaming"
+				1+1
+			rospy.sleep(3)
+			on_box = "no"
 
 	def message_detected_call (self,data):
 		global on_box
@@ -125,6 +129,8 @@ class control:
 		print "state: ", self.state
 		self.pub_speak.publish("The following message, " + self.message)
 		self.last_target_read = "None"
+		while self.state != "roaming"
+			1+1
 		rospy.sleep(3)
 		on_box = "no"			
 		
