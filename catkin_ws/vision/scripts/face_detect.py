@@ -118,7 +118,7 @@ def detect_face(img):
 #	1+1
 
 found_msg = "None"
-frameWidth = 600
+frameWidth = 1280
 
 subjects = ["", "lina", "obama", "mazhar"]
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()

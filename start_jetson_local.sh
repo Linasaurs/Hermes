@@ -9,7 +9,7 @@ else
     CMD="rosrun network communication.py $1 $2"
     gnome-terminal --window-with-profile=keep -e "$CMD"
     sleep 0.5
-    CMD="roslaunch jetson_csi_cam jetson_csi_cam.launch width:=640 height:=360 fps:=16"
+    CMD="roslaunch jetson_csi_cam jetson_csi_cam.launch width:=1280 height:=720 fps:=16"
     gnome-terminal --window-with-profile=keep -e "$CMD"
     sleep 0.5
     CMD="rosrun vision shape.py jetson"
