@@ -10,13 +10,13 @@ else
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="roslaunch usb_cam usb_cam-test.launch"
-    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="rosrun vision shape.py pi"
-    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="rosrun vision face_detect.py pi"
-    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="rosrun speech tts.py"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
