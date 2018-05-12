@@ -25,6 +25,13 @@ class control:
 		print "motion: ", self.motion
 		print "state: ", self.state
 
+		self.pub_vision = rospy.Publisher('turn_vision_on', String, queue_size=10)
+		self.pub_motion = rospy.Publisher('motion', String, queue_size=10)
+		self.pub_target = rospy.Publisher('my_target', String, queue_size=10)
+		self.pub_message = rospy.Publisher('my_message', String, queue_size=10)	
+		self.pub_found = rospy.Publisher('my_found', String, queue_size=10)		
+		self.pub_speak = rospy.Publisher('speak', String, queue_size=10)
+
 		rospy.Subscriber("sonic_front", String, self.sonic_front_call)
 		rospy.Subscriber("face_detected", String, self.face_detected_call)
 		rospy.Subscriber("target_detected", String, self.target_detected_call)
@@ -35,14 +42,7 @@ class control:
 		rospy.Subscriber("other_message", String, self.other_message_call)
 		rospy.Subscriber("other_found", String, self.other_found_call)
 		rospy.Subscriber("speak_done", String, self.speak_done_call)
-		rospy.Subscriber("state_debug", String, self.state_debug_call)
-		
-		self.pub_vision = rospy.Publisher('turn_vision_on', String, queue_size=10)
-		self.pub_motion = rospy.Publisher('motion', String, queue_size=10)
-		self.pub_target = rospy.Publisher('my_target', String, queue_size=10)
-		self.pub_message = rospy.Publisher('my_message', String, queue_size=10)	
-		self.pub_found = rospy.Publisher('my_found', String, queue_size=10)		
-		self.pub_speak = rospy.Publisher('speak', String, queue_size=10)	
+		rospy.Subscriber("state_debug", String, self.state_debug_call)	
 
 
 		rospy.spin()
