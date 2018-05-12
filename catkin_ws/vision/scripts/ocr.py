@@ -54,7 +54,6 @@ def ocrfn(data):
 
 	else:
 		print "Invalid msg"
-		pub_m.publish("invalid")
 		pub_t.publish("invalid")
 
 

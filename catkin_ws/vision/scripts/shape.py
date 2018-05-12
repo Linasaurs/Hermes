@@ -16,13 +16,8 @@ import sys
 
 def start(data):
 	try:
-		if (sys.argv[1] == "jetson"):
-			bridge = CvBridge()
-			frame = bridge.imgmsg_to_cv2(data, "bgr8")		
-		elif (sys.argv[1] == "pi"):
-			cap = cv2.VideoCapture(0)
-			ret, frame = cap.read()
-		
+		bridge = CvBridge()
+		frame = bridge.imgmsg_to_cv2(data, "bgr8")	
 		frame = imutils.resize(frame, width=frameWidth)
 		test_img1 = frame;
 		#cv2.imshow('frame',frame)
@@ -97,6 +92,9 @@ def detectshape (img):
 	out2 = cv2.imwrite('capture2.jpg',img)
 	print shape
 	'''
+
+rospy.init_node('shape', anonymous=True)
+pub = rospy.Publisher('face_box_detected', String, queue_size=10)
 frameWidth = 1024
 white_lower= np.uint8([[[177,178,183 ]]])
 white_higher=np.uint8([[[190,188,193]]])
@@ -105,12 +103,10 @@ hsvupper=cv2.cvtColor(white_higher,cv2.COLOR_BGR2HSV)
 print hsvlower, hsvupper
 lower_range = np.array([0, 0, 200], dtype=np.uint8) ##55 and 80
 upper_range = np.array([180, 255, 255], dtype=np.uint8)
-rospy.init_node('shape', anonymous=True)
+
 if (sys.argv[1] == "jetson"):
 	rospy.Subscriber("/csi_cam/image_raw", Image, start)
 elif (sys.argv[1] == "pi"):
-	while True:
-		start("not supposed to appear")			
-
-pub = rospy.Publisher('face_box_detected', String, queue_size=10)
+	rospy.Subscriber("/usb_cam/image_raw", Image, start)		
 rospy.spin()
+

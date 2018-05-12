@@ -6,11 +6,17 @@ if [ $1 = "help" ]
 then
     echo "my_ip other_ip kp kd side_distance front_distance reverse? sides forward_speed"
 else
-    CMD="roscore"
-    gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
-    sleep 5
     CMD="rosrun network communication.py $1 $2"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    sleep 0.5
+    CMD="roslaunch usb_cam usb_cam-test.launch"
+    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    sleep 0.5
+    CMD="rosrun vision shape.py jetson"
+    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
+    sleep 0.5
+    CMD="rosrun vision face_detect.py jetson"
+    gnome-terminal --window-with-profile=keep -e "ssh -t nvidia@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
     sleep 0.5
     CMD="rosrun speech tts.py"
     gnome-terminal --window-with-profile=keep -e "ssh -t raspi3@$1 source ~/.bashrc; echo '$CMD'; '$CMD'"
