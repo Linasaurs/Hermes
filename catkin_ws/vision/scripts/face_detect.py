@@ -13,8 +13,6 @@ import time
 import os
 from cv_bridge import CvBridge, CvBridgeError
 
-found_msg = "None"
-
 def turn_vision_on_call(data):
 	global found_msg
 	found_msg = "yes"
@@ -25,13 +23,8 @@ def convert(data):
 		if found_msg=="yes":
 			found_msg = "no"
 			global filename
-			if (sys.argv[1] == "jetson"):
-				bridge = CvBridge()
-				frame = bridge.imgmsg_to_cv2(data, "bgr8")		
-			elif (sys.argv[1] == "pi"):
-				cap = cv2.VideoCapture(0)
-				ret, frame = cap.read()
-		
+			bridge = CvBridge()
+			frame = bridge.imgmsg_to_cv2(data, "bgr8")		
 			frame = imutils.resize(frame, width=frameWidth)
 			test_img1 = frame;
 			#cv2.imshow('frame',frame)
@@ -106,9 +99,9 @@ def detect_face(img):
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 	if (sys.argv[1] == "jetson"):
-		face_cascade = cv2.CascadeClassifier('/home/nvidia/catkin_ws/src/vision/scripts/haarcascade_frontalface_alt.xml')
+		face_cascade = cv2.CascadeClassifier('/home/nvidia/catkin_ws/src/vision/scripts/haarcascade_frontalface_alt_jetson.xml')
 	elif (sys.argv[1] == "pi"):
-		face_cascade = cv2.CascadeClassifier('/home/raspi3/catkin_ws/src/vision/scripts/haarcascade_frontalface_alt.xml')
+		face_cascade = cv2.CascadeClassifier('/home/raspi3/catkin_ws/src/vision/scripts/haarcascade_frontalface_alt_pi.xml')
 
 	faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5);
 
@@ -122,22 +115,26 @@ def detect_face(img):
 #def draw_rectangle(img, rect):
 #	1+1
 
-filename = "None"
-subjects = ["", "lina", "obama", "mazhar"]
+found_msg = "None"
 frameWidth = 600
+filename = "None"
+
+subjects = ["", "lina", "obama", "mazhar"]
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-
-rospy.init_node('camera', anonymous=True)		
-
 if (sys.argv[1] == "jetson"):
-	face_recognizer.read("/home/nvidia/catkin_ws/src/vision/scripts/weight.xml")
-	rospy.Subscriber("/csi_cam/image_raw", Image, convert)
+	face_recognizer.read("/home/nvidia/catkin_ws/src/vision/scripts/weight_jetson.xml")
 elif (sys.argv[1] == "pi"):
-	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/weight.xml")
-	while True:
-		convert("not supposed to appear")	
+	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/weight_pi.xml")
 
-rospy.Subscriber("turn_vision_on", String, turn_vision_on_call)   
+rospy.init_node('camera', anonymous=True)	
+
 pub_face = rospy.Publisher('face_detected', String, queue_size=10)
 pub_ocr = rospy.Publisher('ocr_file', String, queue_size=10)
-rospy.spin()
+
+rospy.Subscriber("turn_vision_on", String, turn_vision_on_call) 
+if (sys.argv[1] == "jetson"):
+	rospy.Subscriber("/csi_cam/image_raw", Image, convert)
+elif (sys.argv[1] == "pi"):
+	rospy.Subscriber("/usb_cam/image_raw", Image, convert)  
+
+rospy.spin()	
