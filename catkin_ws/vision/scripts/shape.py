@@ -15,10 +15,11 @@ from cv_bridge import CvBridge, CvBridgeError
 import sys
 
 def start(data):
+	#rospy.loginfo ("hi frame")
 	try:
 		bridge = CvBridge()
 		frame = bridge.imgmsg_to_cv2(data, "bgr8")	
-		frame = imutils.resize(frame, width=frameWidth)
+		frame = imutils.resize(frame, height= frameHeight,width=frameWidth)
 		#test_img1 = frame;
 		#cv2.imshow('frame',frame)
 		#perform a prediction
@@ -31,8 +32,8 @@ def start(data):
 		
 def detectshape (img):
 	
-	resized = imutils.resize(img, width=600)
-	ratio = img.shape[0] / float(resized.shape[0])
+	#resized = imutils.resize(img, width=600)
+	#ratio = img.shape[0] / float(resized.shape[0])
 
 
 	# convert the resized image to grayscale, blur it slightly,
@@ -41,7 +42,7 @@ def detectshape (img):
 	#hue ,saturation ,value = cv2.split(hsv)
 	#mask = cv2.inRange(hsv,  lower_range, upper_range)
 	#res = cv2.bitwise_and(resized,resized, mask= mask)
-	gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 	#thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
 	#cv2.imwrite('capture2.jpg',thresh)
@@ -49,10 +50,13 @@ def detectshape (img):
 	#cv2.imwrite('capture2.jpg',edges)
 	#out = cv2.imwrite('capture3.jpg',resized)
 	
-	circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 50, param1=200, param2=80, minRadius=0, maxRadius=0)
+	circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 50, param1=100, param2=40, minRadius=0, maxRadius=0)
+
 	if (not circles is None):
 		pub.publish("page found")
-		print "page found"
+		rospy.loginfo("page found")
+	else:
+		rospy.loginfo("page not found")
 		#circles = np.uint16(np.around(circles))
 		#for i in circles[0,:]:
 	   		# draw the outer circle
@@ -95,7 +99,8 @@ def detectshape (img):
 
 rospy.init_node('shape', anonymous=True)
 pub = rospy.Publisher('face_box_detected', String, queue_size=10)
-frameWidth = 1024
+frameWidth = 640
+frameHeight = 360
 white_lower= np.uint8([[[177,178,183 ]]])
 white_higher=np.uint8([[[190,188,193]]])
 hsvlower= cv2.cvtColor(white_lower,cv2.COLOR_BGR2HSV)

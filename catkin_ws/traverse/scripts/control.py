@@ -7,7 +7,7 @@ import sys
 import stringdist
 
 on_box="no"
-subjects = ["", "lina", "obama", "mazhar"]
+subjects = ["", "lina", "mazhar", "rami", "emma", "queenbee" ]
 
 class control:
 	def __init__(self):

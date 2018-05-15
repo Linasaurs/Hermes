@@ -30,7 +30,7 @@ def convert(data):
 				for i in range(1):			
 					bridge = CvBridge()
 					frame = bridge.imgmsg_to_cv2(data, "bgr8")		
-					frame = imutils.resize(frame, width=frameWidth)
+					frame = imutils.resize(frame, height = frameHeight, width=frameWidth)
 					#test_img = frame;
 					#cv2.imshow('frame',frame)
 					#perform a prediction
@@ -79,7 +79,7 @@ def convert(data):
 	
 				answer = max(labels_detected, key=labels_detected.get)
 	
-				if (answer == "No face detected" or answer == "unknown"):
+				if (answer == "No face detected"):
 					print ("Answer: No face detected")
 					pub_ocr.publish(filename)
 				else:
@@ -119,13 +119,14 @@ def detect_face(img):
 
 found_msg = "None"
 frameWidth = 1280
+frameHeight = 720
 
-subjects = ["", "lina", "obama", "mazhar"]
+subjects = ["", "lina", "mazhar", "rami", "emma", "queenbee" ]
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 if (sys.argv[1] == "jetson"):
 	face_recognizer.read("/home/nvidia/catkin_ws/src/vision/scripts/weight_jetson.xml")
 elif (sys.argv[1] == "pi"):
-	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/weight_pi.xml")
+	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/piwe.xml")
 
 rospy.init_node('camera', anonymous=True)	
 
