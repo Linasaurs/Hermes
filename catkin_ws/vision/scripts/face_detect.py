@@ -126,7 +126,7 @@ face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 if (sys.argv[1] == "jetson"):
 	face_recognizer.read("/home/nvidia/catkin_ws/src/vision/scripts/weight_jetson.xml")
 elif (sys.argv[1] == "pi"):
-	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/piwe.xml")
+	face_recognizer.read("/home/raspi3/catkin_ws/src/vision/scripts/weight_pi.xml")
 
 rospy.init_node('camera', anonymous=True)	
 
